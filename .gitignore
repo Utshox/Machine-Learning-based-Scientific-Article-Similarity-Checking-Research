@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+.DS_Store
+.idea/
+.vscode/
+*.pyc
+data/pan2025_mock/
