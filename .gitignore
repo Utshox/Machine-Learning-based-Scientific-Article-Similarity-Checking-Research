@@ -5,3 +5,12 @@ __pycache__/
 .vscode/
 *.pyc
 data/pan2025_mock/
+implementation/venv/
+implementation/__pycache__/
+implementation/data/*.zip
+implementation/data/extracted/
+implementation/.pair_labels_*.json
+GCP_READY/
+source/
+*.log
+patch_*.py

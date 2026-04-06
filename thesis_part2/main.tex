@@ -1,0 +1,711 @@
+\documentclass[12pt, a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage[left=3cm, right=1.5cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+% longtable removed for Overleaf compatibility
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, backgrounds}
+\usepackage[round]{natbib}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
+
+% Page numbering
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+
+% Section formatting
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\Large\bfseries}{\thesection.}{0.5em}{}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.5em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsection}{0.5em}{}
+
+\begin{document}
+
+% ============================================================================
+% TITLE PAGE
+% ============================================================================
+\begin{titlepage}
+	\centering
+	\textbf{VILNIUS GEDIMINAS TECHNICAL UNIVERSITY}\\
+	\textbf{FACULTY OF FUNDAMENTAL SCIENCES}\\
+	\textbf{DEPARTMENT OF INFORMATION SYSTEMS}\\
+	\vspace{3cm}
+	\large
+	Shinthiya Nowsain, Promi\\
+	\vspace{1.5cm}
+	\LARGE
+	\textbf{Machine Learning-based Scientific Article Similarity Checking Research}\\
+	\vspace{1.5cm}
+	\large
+	Master's degree Thesis\\
+	Information Systems Software Engineering study programme, state code 6211BX017\\
+	Informatics Engineering study field\\
+	\vspace{2cm}
+	Supervisor Prof. Dr. Diana Kalibatien\.{e}\\
+	\vfill
+	Vilnius, 2025
+\end{titlepage}
+
+% ============================================================================
+% TABLE OF CONTENTS
+% ============================================================================
+\newpage
+\tableofcontents
+
+% ============================================================================
+% ABBREVIATIONS
+% ============================================================================
+\newpage
+\section*{Abbreviations}
+\addcontentsline{toc}{section}{Abbreviations}
+
+\begin{tabular}{@{}ll@{}}
+	VSM    & -- Vector Space Model \\
+	SVM    & -- Support Vector Machine \\
+	CNN    & -- Convolutional Neural Network \\
+	RNN    & -- Recurrent Neural Network \\
+	LCS    & -- Longest Common Subsequence \\
+	PAN    & -- Plagiarism Analysis, Authorship, and Near-Duplicate Detection \\
+	NLP    & -- Natural Language Processing \\
+	LSTM   & -- Long Short-Term Memory \\
+	BERT   & -- Bidirectional Encoder Representations from Transformers \\
+	SBERT  & -- Sentence-BERT \\
+	TF-IDF & -- Term Frequency-Inverse Document Frequency \\
+	CL-PD  & -- Cross-Lingual Plagiarism Detection \\
+	SimCSE & -- Simple Contrastive Learning of Sentence Embeddings \\
+	LLM    & -- Large Language Model \\
+	POS    & -- Part-of-Speech \\
+	MPS    & -- Metal Performance Shaders \\
+	DP     & -- Dynamic Programming \\
+\end{tabular}
+
+% ============================================================================
+% CHAPTER 1: INTRODUCTION
+% ============================================================================
+\newpage
+\section{INTRODUCTION}
+
+Scientific inquiry has changed fundamentally. This shift, primarily fuelled by the modernisation of academic libraries and the sudden explosion of open-access repositories, serves as a double-edged sword. While it certainly facilitates a vital global exchange of knowledge, it has unintentionally lowered the barrier for academic misconduct, most notably plagiarism. As the volume of digital content continues to grow, the strategies used to mask stolen work have become incredibly sophisticated. Plagiarists no longer rely on simple ``copy-paste'' methods that traditional tools flag instantly. Instead, they hide the original source through a complex web of paraphrasing, synonym replacement, and structural reordering. Consequently, unmasking this ``semantic plagiarism'' has become a defining challenge for today's academic community \citep{Malik2021}.
+
+Standard detection systems frequently fall short. The reason is straightforward: they rely too heavily on lexical string matching and fingerprinting algorithms. While these systems are undeniably effective at spotting exact matches, they often fail to grasp the deeper, underlying intent of a text \citep{ElRashidy2022}. To address this limitation, recent research is pivoting toward the intersection of Artificial Intelligence and Natural Language Processing (NLP). By leveraging techniques like Deep Learning and Transformer-based models, we can now analyse text at a semantic level, capturing context rather than just surface-level syntax \citep{LiuZhu2023}. However, applying these models to scientific articles is not straightforward. The sheer length, technical complexity, and specific formatting of academic texts present unique computational hurdles. This master thesis addresses these specific obstacles by developing a Machine Learning-based approach tailored specifically for scientific article similarity checking.
+
+Recently, the problem has expanded beyond human-driven deception to include machine-generated content. With the rapid advancement of Large Language Models (LLMs), scientific publishing now faces a genuine threat from synthetic text that mimics academic styles but lacks any foundation in authentic research. \citet{Alhijawi2025} identify this as a critical modern challenge. They observe that standard similarity tools often fail to distinguish human manuscripts from those produced by models like ChatGPT, which can generate coherent but entirely fabricated data. This shift demands a total evolution in detection strategies. As \citet{GreinerPetter2025} argue in their analysis of the PAN 2025 shared task, robust deep learning models are no longer a luxury; they are essential for spotting the sophisticated generative plagiarism that slips past naive semantic checks.
+
+\subsection{Investigation Object}
+
+The Investigation Object is machine learning and natural language processing algorithms designed for semantic text similarity assessment and plagiarism detection within scientific literature.
+
+\subsection{The Aim and Tasks of the Thesis}
+
+The \textbf{Aim of the Research} is to improve the detection of semantic plagiarism in scientific articles by developing a hybrid similarity checking model that integrates deep learning embeddings with structural feature analysis.
+
+Three (3) tasks were defined to achieve the aim of the thesis:
+
+\begin{enumerate}
+	\item To analyse and compare state-of-the-art text similarity detection methods, specifically evaluating the performance of Deep Learning architectures (such as BERT and LSTMs) against Feature Engineering techniques (such as SVM).
+
+	\item To propose a scientific article similarity approach that combines semantic vector representations (e.g., SBERT) with syntactic alignment algorithms to enhance detection accuracy for paraphrased content.
+
+	\item To implement the proposed approach and experimentally evaluate its validity and performance metrics against existing baseline models.
+\end{enumerate}
+
+\subsection{Novelty of the Topic}
+
+The novelty of this research is grounded in addressing the detection gaps that currently exist between machine-generated text and complex human obfuscation. Traditional systems do a reasonable job at catching verbatim copying, yet \citet{GreinerPetter2025} point out in their PAN 2025 overview that most semantic models still struggle when trying to generalise against content from LLMs like Llama or Mistral. Furthermore, \citet{Alhijawi2025} suggest that entirely distinct deep learning architectures are now needed to tell the difference between real scientific inquiry and the ``hallucinated'' data that ChatGPT generates. Most current checkers lack this capability. Moreover, because existing algorithms usually assume a simple sentence-to-sentence alignment, they miss the bigger picture. \citet{Saqaabi2025} proved this by showing that sentence-level detectors fail during paragraph-level manipulation where text is reordered or split across a wider context window. By moving the analysis from isolated lines to contextual paragraphs, this thesis introduces a hybrid model designed to capture those hidden inter-sentence dependencies that currently slip past state-of-the-art systems.
+
+\subsection{Relevance of the Topic}
+
+The relevance of this research is driven by the significant pressure on academic institutions and journals to maintain the integrity of the scientific record. \citet{Alnaimat2025} highlight that academic journals are currently overwhelmed with submissions that require intensive ethics checks. Automated tools are the only way to keep scientific credibility intact. This necessity is statistically supported by \citet{Murch2025}, who analysed recent doctoral dissertations and found that roughly 6\% of the text was AI-generated---a clear sign that misconduct is evolving. Because of this, \citet{Setu2025} contend that combining semantic checks with direct copy detection is now a requirement for fair assessment. Their findings validate why developing the robust detection model in this work is so practically important.
+
+\subsection{Research Methodology}
+
+The analytical side of this work relies on information analysis and comparative research to map out the current state of detection techniques, focusing specifically on the trade-offs between feature-based classifiers like SVM and neural networks such as CNN or LSTM.
+
+To build the proposed approach, logical generalisation and conceptual modelling were used to design a system architecture that addresses the gaps in semantic analysis. For the practical side, experimental research methods were applied by testing the prototype against the PAN 2025 Generated Plagiarism Detection benchmark dataset \citep{GreinerPetter2025} to obtain a clear, quantitative measure of improvement in Precision, Recall, and F1-scores.
+
+\subsection{Scientific Value of the Thesis}
+
+The main scientific value of this work lies in the development of an optimised workflow for scientific text similarity checking. By rigorously comparing and integrating Deep Learning embeddings with feature-based heuristics, this thesis contributes new knowledge regarding the effective application of NLP in the domain of academic integrity. The research provides a validated methodology for detecting non-verbatim plagiarism, offering a more robust alternative to existing string-matching paradigms.
+
+\subsection{Main Results of the Thesis}
+
+The main results of this thesis are as follows:
+
+\begin{enumerate}
+	\item A systematic comparison of contemporary machine learning approaches for plagiarism detection, establishing the superior efficacy of Transformer-based models for semantic analysis over traditional lexical methods.
+
+	\item A hybrid similarity detection architecture combining SBERT embeddings, structural feature extraction, and Semantic Smith-Waterman alignment that achieves measurable improvement over a semantic-only baseline on the PAN 2025 dataset.
+
+	\item An empirical characterisation of the Precision-Recall trade-off in plagiarism detection, with specific findings on optimal threshold selection and the contribution of structural features.
+\end{enumerate}
+
+\subsection{Structure of the Work}
+
+The first section introduces the context of scientific plagiarism and defines the research problem and objectives. The second section presents the analysis of related works, reviewing methodological approaches from recent literature and standard evaluation datasets. The third section describes the design of the proposed similarity detection architecture and the specific algorithms selected for implementation. The fourth section presents the experimental validation of the developed prototype and discusses the obtained results. The fifth section presents the conclusions and directions for future work.
+
+\subsection{Approbation of the Work}
+
+The approbation of this research will be carried out after the main results of the thesis are obtained. It is planned to prepare a scientific presentation and participate in a conference related to information systems or artificial intelligence, such as the annual ``Information Systems and Technologies'' conference organised by Vilnius Gediminas Technical University.\footnote{\url{https://conferences.vilniustech.lt/index.php/SITIS/en}}
+
+% ============================================================================
+% CHAPTER 2: RELATED WORK ANALYSIS
+% ============================================================================
+\newpage
+\section{RELATED WORK ANALYSIS}
+
+The surge in digital academic resources and the growth of open-access repositories has completely reshaped the world of scientific research. Even though this accessibility promotes a vital global sharing of knowledge, it has also, quite unintentionally, led to a rise in academic misconduct, especially plagiarism. This part of the thesis analyses current scientific literature to trace how detection methods have changed over time, looking at the shift from basic feature engineering to the much more advanced Deep Learning architectures used today.
+
+\subsection{Description of Plagiarism Detection and Taxonomy}
+
+At its core, plagiarism is defined as the act of taking someone else's words, ideas, or work and passing them off as one's own without giving proper credit \citep{Smith2023}. This breach of academic and professional integrity goes far beyond simple copying and pasting. Plagiarism is not always a deliberate act---accidental citation omissions or disorganised research notes can lead to serious plagiarism charges. This makes the rigorous acknowledgment of every source vital in every piece of writing.
+
+\citet{Amirzhanov2025} note in their systematic survey that plagiarism involves the unacknowledged use of another person's language, ideas, or results. In the current academic environment, the problem has shifted: it is no longer just about simple copy-pasting but has moved into much more complex types of obfuscation. Current research sorts these into two main categories:
+
+\textbf{1. Literal Plagiarism.}
+Literal plagiarism is the most basic form of academic fraud. Often called verbatim or copy-paste plagiarism, it is the fundamental type of misconduct researchers face today. \citet{Amirzhanov2025} describe this as the direct use of text segments from a source without sufficient changes or credit. \citet{Setu2025} make an important point that this acts as a first layer for detection: algorithms must find these direct overlaps first, and only then move on to more computationally expensive semantic models.
+
+Literal plagiarism is further categorised into two distinct sub-types:
+\begin{enumerate}
+	\item \textit{Exact Copy (Verbatim).} Involves taking a sentence or an entire document and copying it word for word. Every single character and the entire sequence of text stays identical to the original source.
+	\item \textit{Near-Copy (Camouflaged).} The plagiarist tries to trick simple string matching filters by making small, surface-level changes. \citet{Lieharyani2025} call these tweaks ``lexical noise''---this might include removing commas, fixing spelling, or changing ``do not'' to ``don't.'' Even with these edits, the actual lexical structure is statistically the same as the original.
+\end{enumerate}
+
+\textbf{2. Intelligent (Obfuscated) Plagiarism.}
+Intelligent plagiarism, often called obfuscated or semantic plagiarism, is a clever attempt to hide where content came from by altering the linguistic structure while preserving the core meaning. Unlike the literal kind, this does not rely on simple word overlaps---instead, it breaks the sequence of words. This renders traditional string-matching algorithms almost ineffective. \citet{Amirzhanov2025} classify this as a semantic challenge. \citet{Sajid2025} note that detecting this requires heavy NLP models like Transformers that must capture the underlying semantic vector space rather than just surface-level keywords.
+
+Based on the analysed literature, intelligent plagiarism is categorised into three distinct classifications:
+
+\begin{enumerate}
+	\item \textit{Paraphrasing.} Paraphrasing is a deliberate effort to rewrite text using entirely different sentence structures and synonyms while keeping the original meaning intact. \citet{Saqaabi2025} highlight that complex paragraph-level manipulations---such as splitting, joining, or shifting sentences---render standard sentence-matching models ineffective. \citet{Zhou2024} further note that standard datasets often lack these complex samples, causing deep learning models to fail when the syntactic structure is heavily scrambled.
+
+	\item \textit{Cross-Lingual Plagiarism.} This involves translating a text from one language (e.g., Urdu, Bengali) into another to evade monolingual detectors \citep{Bouaine2023, Zahid2023}. \citet{Bouaine2023} and \citet{Zahid2023} emphasise that this method completely removes lexical overlap. Detection requires ``multilingual embedding spaces'' where semantically equivalent words across languages are mathematically close, or the use of intermediate translation layers \citep{Islam2023}.
+
+	\item \textit{AI-Generated Plagiarism.} The emergence of LLMs has introduced a new, highly elusive category. Users prompt models like ChatGPT or Llama to ``rewrite this paragraph in a scientific style'' or ``generate a literature review on topic X.'' \citet{Alhijawi2025} describe this as the generation of ``synthetic scientific content'' that mimics the statistical distribution of human writing but lacks authentic provenance. \citet{GreinerPetter2025} warn that this content is unique at the character level (passing literal checks) and semantically coherent (passing simple semantic checks), requiring distinct deep learning classifiers to identify ``hallucinated'' patterns.
+\end{enumerate}
+
+\subsection{Relevance to Scientific Article Similarity Checking}
+
+Detecting plagiarism in scientific papers is fundamentally different from standard text analysis. The core issue lies in the way academic writing is constructed: these papers follow very rigid structures and use a high density of specialised terms. This leads to a specific \textit{context similarity problem} where basic lexical detectors might flag standard technical jargon as actual collusion \citep{Lieharyani2025}. Simple string matching is insufficient to distinguish between a field's standard vocabulary and actual content theft \citep{Setu2025}.
+
+Complex arguments also make scientific papers vulnerable to smart obfuscation. Authors might use paragraph-level paraphrasing like splitting or shifting sentences, which renders traditional sentence-level similarity checks ineffective without the help of deep learning \citep{Saqaabi2025}. The rise of generative AI compounds this difficulty: LLMs can synthesise scientific content that looks plausible, forcing the development of new detection paradigms to verify the authenticity of doctoral dissertations and research papers \citep{Alhijawi2025, Murch2025}. Thus, modern similarity checking must evolve toward robust semantic models that can navigate the complicated linguistic world of scientific literature \citep{GreinerPetter2025}.
+
+\subsubsection{Comparison of Detection Methods in Analysed Literature}
+
+Table~\ref{tab:methods} categorises traditional scientific article similarity checking methods into lexical matching and feature-based approaches, while new methods leverage deep learning, Transformers, and optimisation techniques. Traditional methods excel in efficiency and interpretability, making them suitable for detecting verbatim copying, but they are limited by their inability to understand semantic context. Conversely, new methods offer superior accuracy and robustness against intelligent plagiarism like paraphrasing, though they come with higher computational costs and complexity.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of Detection Methods. Traditional methods are listed in the upper section; new methods in the lower section.}
+\label{tab:methods}
+\footnotesize
+\begin{tabular}{p{2cm}p{3.2cm}p{2.8cm}p{2.3cm}p{2cm}}
+	\toprule
+	\textbf{Method Type} & \textbf{Key Approaches} & \textbf{Strengths} & \textbf{Limitations} & \textbf{Citations} \\
+	\midrule
+	Lexical \& Statistical & N-gram Overlap; VSM; Levenshtein Distance & Very fast; easy to interpret; effective for literal plagiarism & Fails against paraphrasing; false positives in homogeneous datasets & \citet{Lieharyani2025}; \citet{ElRashidy2022} \\
+	\midrule
+	Feature-Based ML & SVM with POS tags, sentence length; Na\"ive Bayes & Detects stylistic anomalies; feature importance analysable & Requires domain expertise; surface-level patterns & \citet{ElRashidy2024}; \citet{Zahid2023} \\
+	\midrule
+	Sequential DL & Siamese LSTM/RNN; Attention Mechanisms & Captures sequential dependencies; handles reordered sentences & Slower training; struggles with long paragraphs & \citet{Bao2024}; \citet{Asalkar2025} \\
+	\midrule
+	Transformer (SOTA) & BERT / E-BERT; bidirectional semantic understanding & Understands meaning, synonyms, and context & Requires GPUs; ``black box'' nature & \citet{Antonius2023}; \citet{Sajid2025} \\
+	\midrule
+	Optimisation & Hybrid BERT + Smith-Waterman; DistilBERT; SimCSE/SBERT & Effective against intelligent plagiarism; reduces computation & Slightly lower accuracy than full models & \citet{Moravvej2023}; \citet{JingLiu2023} \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+As can be summarised from Table~\ref{tab:methods}, the categorisation of detection methodologies reveals a fundamental trade-off between computational efficiency and semantic depth. Traditional methods, relying on lexical matching (e.g., Levenshtein distance) and feature-based Machine Learning (e.g., SVM), remain highly effective for detecting verbatim copying and stylistic anomalies. \citet{ElRashidy2024} and \citet{Lieharyani2025} demonstrate that these approaches offer superior speed and interpretability, making them suitable for large-scale initial filtering, even though they fail against complex semantic obfuscation. In contrast, new methods leverage Deep Learning and Transformer architectures to capture the underlying meaning of text. \citet{Antonius2023} and \citet{Saqaabi2025} validate that these models provide state-of-the-art accuracy for detecting ``intelligent'' plagiarism, albeit at a significantly higher computational cost that recent optimisation studies \citep{JingLiu2023} are striving to mitigate.
+
+\subsubsection{Evolution of Detection Methods in Analysed Literature}
+
+The field of plagiarism detection is currently witnessing a paradigm shift from simple lexical matching toward complex Machine Learning (ML) and Deep Learning (DL) architectures. This change is driven by the need to catch ``intelligent'' plagiarism---clever paraphrasing, hidden translations, and generative AI content that older algorithms cannot find. Based on recent literature, this progression occurs in four distinct methodological stages:
+
+\textbf{1. Feature-Based Machine Learning.} While Deep Learning dominates current research, traditional ML algorithms remain relevant for their interpretability and efficiency. \citet{ElRashidy2024} demonstrated that when SVM is augmented with aggressive feature selection (using Chi-square to select 42 stylistic features like POS tag ratios and sentence length), it can achieve a robust accuracy of 96.5\%. This proves that ``shallow'' learning is still effective for identifying stylistic anomalies if the features are carefully engineered. Similarly, \citet{Zahid2023} successfully applied supervised classifiers (SVM, Na\"ive Bayes) to the challenging domain of Cross-Lingual Plagiarism Detection (CL-PD).
+
+\textbf{2. Sequential Deep Learning (RNNs and LSTMs).} To overcome the limitations of manual feature engineering, researchers turned to Recurrent Neural Networks (RNNs). \citet{Bao2024} introduced an Attentive Siamese LSTM that allows the model to focus on specific ``salient'' words within a sentence pair, significantly improving detection in low-resource languages. \citet{Asalkar2025} confirmed that LSTM-based models outperform CNNs when capturing the long-range sequential dependencies typical of scientific arguments. \citet{Bouaine2023} combined Doc2Vec embeddings with Siamese LSTMs and established a new benchmark for cross-lingual detection (English--Spanish) that surpasses standard BERT implementations in specific multilingual contexts.
+
+\textbf{3. Transformer-Based Models (The State-of-the-Art).} The most significant advancement is the adoption of Transformer architectures utilising self-attention mechanisms. \citet{Antonius2023} achieved a remarkable 99.5\% accuracy by combining E-BERT with the classic Smith-Waterman alignment algorithm. This hybrid approach uses BERT's semantic understanding to ``match'' paraphrased concepts while using Smith-Waterman to precisely align scrambled sentence structures---a critical requirement for scientific text. \citet{Moravvej2023} advanced this further by integrating Differential Evolution (DE) to optimise the weights of BERT and Attention-LSTMs, effectively addressing the problem of ``imbalanced datasets'' where actual plagiarism cases are rare.
+
+\textbf{4. Optimisation and Efficiency.} Full Transformer models are computationally expensive for processing long scientific articles. \citet{JingLiu2023} proposed a population-based detection method using DistilBERT---a ``distilled'' version of BERT that keeps 97\% of the performance but reduces training time by 60\%. Similarly, \citet{LiuZhu2023} developed a ``scenario-based'' framework that chooses between SimCSE and SBERT depending on the complexity of the text, ensuring an optimal balance between detection speed and semantic accuracy.
+
+In conclusion, while traditional ML still provides a high-speed baseline, the field is clearly moving toward Hybrid Transformer Models. By combining the semantic strength of BERT with the structural precision of alignment algorithms, recent research is now able to detect the most subtle forms of scientific plagiarism.
+
+\subsection{Comparative Analysis of Related Literature Works}
+
+Table~\ref{tab:comparative} presents a comprehensive analysis of the scientific articles related to scientific article similarity checking. This comparative analysis details the specific ML/DL approach utilised in each study, the problem domain addressed, the benchmark datasets employed, the attributes used for prediction, and the main experimental results.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparative Analysis of Related Literature Works (selected key studies).}
+\label{tab:comparative}
+\footnotesize
+\begin{tabular}{p{2.2cm}p{2.2cm}p{2cm}p{1.5cm}p{1.5cm}p{3cm}}
+	\toprule
+	\textbf{Reference} & \textbf{Approach} & \textbf{Domain} & \textbf{Dataset} & \textbf{Metric} & \textbf{Main Result} \\
+	\midrule
+	\citet{Antonius2023} & E-BERT + Smith-Waterman & Obfuscated plagiarism & PAN PC-11 & Acc: 99.5\% & Near-perfect accuracy aligning semantics with sequence \\
+	\midrule
+	\citet{Alhijawi2025} & AI Catcher (MLP+CNN) & LLM content detection & ChatGPT data & Acc, F1 & Detects ChatGPT scientific text via linguistic+deep features \\
+	\midrule
+	\citet{Saqaabi2025} & DL for paragraphs & Paragraph paraphrasing & Custom & Acc, BLEU & Identifies sentence splitting/shifting missed by others \\
+	\midrule
+	\citet{ElRashidy2024} & SVM + Chi-square & Stylistic plagiarism & PAN 2013--14 & Acc: 96.5\% & SVM with 42 features detects stylistic anomalies \\
+	\midrule
+	\citet{Bao2024} & Attentive Siamese LSTM & Low-resource & Tibetan-Chinese & Acc, F-m & Attention on salient keywords improves detection \\
+	\midrule
+	\citet{Bouaine2023} & Doc2Vec + LSTM & Cross-lingual & PAN-11 & F1 & Outperformed BERT for English--Spanish pairs \\
+	\midrule
+	\citet{JingLiu2023} & DistilBERT + DE & Population-based & MSRP, PAN & Acc, Time & 97\% BERT accuracy, 60\% faster \\
+	\midrule
+	\citet{Moravvej2023} & BERT+LSTM+DE & Imbalanced data & PAN 2013--14 & F1 & DE optimisation helps imbalanced plagiarism data \\
+	\midrule
+	\citet{GreinerPetter2025} & Systems evaluation & Gen. AI plagiarism & PAN 2025 & P, R & High recall but low precision on LLM content \\
+	\midrule
+	\citet{Murch2025} & Turnitin AI & AI in dissertations & 200 theses & Prevalence & 6\% of recent dissertations contain AI text \\
+	\midrule
+	\citet{Lieharyani2025} & SBERT vs Levenshtein & Homogeneous answers & 854 answers & F1, R & Lexical outperformed SBERT in short-answer contexts \\
+	\midrule
+	\citet{LiuZhu2023} & SimCSE/SBERT & Similarity optimisation & Custom & Acc, Eff & Model selection by complexity balances speed/accuracy \\
+	\bottomrule
+\end{tabular}
+\end{table}
+
+Additional studies reviewed include: \citet{Asalkar2025} (BERT-LSTM vs CNN), \citet{Chang2023} (coarse-fine-grained filtering), \citet{Sajid2025} (comparative review of techniques), \citet{Setu2025} (two-step semantic+copy detection), \citet{Zahid2023} (cross-lingual Urdu-English SVM), and \citet{Zhou2024} (paraphrase dataset limitations).
+
+Table~\ref{tab:comparative} highlights the rapid methodological advancement in the field, specifically the shift toward hybrid deep learning architectures. Among the most promising recent developments, \citet{Alhijawi2025} demonstrated how effective a hybrid MLP-CNN model (``AI-Catcher'') can be, successfully blending linguistic patterns with deep features to detect LLM-generated scientific content. \citet{Saqaabi2025} presented a novel deep learning approach capable of identifying complex paragraph-level paraphrasing, addressing a structural gap that sentence-level detectors often miss. Finally, \citet{Asalkar2025} validated that hybrid BERT-LSTM models beat traditional CNNs for capturing semantic similarity, confirming the potential of combining Transformer embeddings with sequential learning.
+
+\subsection{Summary of Related Literature Work Analysis}
+
+In the comparative analysis (Table~\ref{tab:comparative}), a major methodological shift becomes evident. Traditional methods like SVM remain effective at spotting stylistic anomalies, often reaching accuracies near 96.5\% \citep{ElRashidy2024}. However, they struggle with the complex semantic tricks used in modern scientific plagiarism. Recent research has started leveraging sequential models: LSTM networks with attention mechanisms have proven better at capturing long-range dependencies vital for catching paraphrasing or cross-lingual fraud \citep{Bao2024, Bouaine2023}. Currently, the state of the art is defined by Transformer-based models. Hybrid approaches mixing BERT with sequence alignment algorithms achieve almost perfect accuracy around 99.5\%, even with heavily obfuscated text \citep{Antonius2023}.
+
+Despite their high accuracy, Transformer models come with significant computational costs, prompting a new wave of research into optimisation techniques such as DistilBERT and Differential Evolution that aim to balance detection precision with processing efficiency \citep{JingLiu2023, Moravvej2023}. Furthermore, the rise of AI-generated content has introduced an entirely new dimension, necessitating novel strategies that go beyond simple similarity checking to verify scientific authenticity \citep{Alhijawi2025, Murch2025}.
+
+These findings directly motivate the proposed approach in Chapter~3: a hybrid architecture that combines the semantic strength of SBERT with the structural precision of feature analysis and the alignment capability of the Smith-Waterman algorithm, specifically targeting the paragraph-level manipulations and LLM-generated content that current systems struggle to detect.
+
+% ============================================================================
+% CHAPTER 3: PROPOSED APPROACH
+% ============================================================================
+\newpage
+\section{PROPOSED APPROACH FOR SCIENTIFIC ARTICLE SIMILARITY CHECKING}
+
+This chapter presents the design of the proposed hybrid similarity checking model. The architecture directly addresses the gaps identified in the related work analysis (Chapter~2), where it was established that traditional lexical methods fail against semantic obfuscation and that Transformer-based models, while accurate, require structural alignment to handle paragraph-level manipulations \citep{Antonius2023, Saqaabi2025}. The proposed system integrates three core components: (1)~semantic embedding via Sentence-BERT, (2)~structural feature extraction, and (3)~Semantic Smith-Waterman alignment. This combination is designed to detect both paraphrased content and structurally reordered plagiarism in scientific articles.
+
+\subsection{System Architecture Overview}
+
+The proposed system follows a modular pipeline architecture consisting of five sequential stages: data ingestion, text windowing, dual-channel feature computation, hybrid scoring, and alignment-based detection. Figure~\ref{fig:architecture} illustrates the high-level data flow.
+
+\begin{figure}[htbp]
+	\centering
+	\definecolor{inputblue}{RGB}{41,65,114}
+	\definecolor{processgreen}{RGB}{34,102,85}
+	\definecolor{scoreorange}{RGB}{153,84,34}
+	\definecolor{outputred}{RGB}{140,42,42}
+	\definecolor{lightgray}{RGB}{245,245,245}
+	\definecolor{midgray}{RGB}{210,210,210}
+	\definecolor{channelsem}{RGB}{225,238,248}
+	\definecolor{channelstr}{RGB}{232,245,233}
+	\resizebox{0.92\textwidth}{!}{%
+	\begin{tikzpicture}[
+	    node distance=0.55cm and 1.0cm,
+	    >={Stealth[length=2.5mm, width=1.8mm]},
+	    inputblock/.style={rectangle, draw=inputblue, fill=inputblue!8, text=inputblue, font=\small\bfseries, minimum width=2.6cm, minimum height=0.85cm, align=center, rounded corners=2pt, line width=0.7pt},
+	    processblock/.style={rectangle, draw=processgreen, fill=processgreen!6, text=black, font=\small, minimum width=3.0cm, minimum height=0.85cm, align=center, rounded corners=2pt, line width=0.7pt},
+	    scoreblock/.style={rectangle, draw=scoreorange, fill=scoreorange!6, text=black, font=\small, minimum width=3.0cm, minimum height=0.85cm, align=center, rounded corners=2pt, line width=0.7pt},
+	    alignblock/.style={rectangle, draw=outputred, fill=outputred!6, text=black, font=\small, minimum width=3.0cm, minimum height=0.85cm, align=center, rounded corners=2pt, line width=0.7pt},
+	    outputblock/.style={rectangle, draw=outputred, fill=outputred!10, text=outputred, font=\small\bfseries, minimum width=2.6cm, minimum height=0.85cm, align=center, rounded corners=2pt, line width=0.7pt},
+	    param/.style={rectangle, draw=midgray, fill=lightgray, text=black, font=\scriptsize\itshape, minimum width=2.0cm, minimum height=0.5cm, align=center, rounded corners=1pt, line width=0.4pt},
+	    grouplabel/.style={font=\footnotesize\scshape, text=black!55},
+	    arrow/.style={->, line width=0.6pt, color=black!65},
+	]
+	% === INPUTS ===
+	\node[inputblock] (susp) {Suspicious\\[-1pt]Document};
+	\node[inputblock, right=2.2cm of susp] (src) {Source\\[-1pt]Document};
+	% === WINDOWING ===
+	\node[processblock, below=1.1cm of $(susp)!0.5!(src)$] (window) {Sliding Window\\[-1pt]Segmentation};
+	\node[param, right=0.35cm of window] (wp) {$W{=}150$, $S{=}25$};
+	% === SEMANTIC CHANNEL ===
+	\node[processblock, below left=1.3cm and 0.7cm of window, fill=channelsem, draw=inputblue] (sbert) {SBERT Embedding\\[-1pt]{\scriptsize\texttt{all-MiniLM-L6-v2}}};
+	\node[processblock, below=0.55cm of sbert, fill=channelsem, draw=inputblue] (cossim) {Cosine Similarity\\[-1pt]Matrix};
+	\node[grouplabel, above=0.12cm of sbert] {Semantic Channel};
+	% === STRUCTURAL CHANNEL ===
+	\node[processblock, below right=1.3cm and 0.7cm of window, fill=channelstr, draw=processgreen] (feat) {Structural Feature\\[-1pt]Extraction};
+	\node[processblock, below=0.55cm of feat, fill=channelstr, draw=processgreen] (expdecay) {Exponential Decay\\[-1pt]Similarity};
+	\node[param, right=0.35cm of feat] (fp) {\scriptsize POS, stopwords,\\[-2pt] \scriptsize sentence length};
+	\node[grouplabel, above=0.12cm of feat] {Structural Channel};
+	% === FUSION ===
+	\node[scoreblock, below=1.3cm of $(cossim)!0.5!(expdecay)$] (hybrid) {Hybrid Score\\[-1pt]Matrix $\mathbf{H}$};
+	\node[param, right=0.35cm of hybrid] (hp) {$\lambda{=}0.80$};
+	% === ALIGNMENT ===
+	\node[alignblock, below=0.9cm of hybrid] (sw) {Semantic Smith-Waterman\\[-1pt]Alignment};
+	\node[param, right=0.35cm of sw] (sp) {$\tau{=}0.55$,\; $g{=}{-}0.5$};
+	% === POST-PROCESSING ===
+	\node[alignblock, below=0.6cm of sw] (merge) {Detection Merging};
+	% === OUTPUT ===
+	\node[outputblock, below=0.6cm of merge] (output) {Character-Level\\[-1pt]Detections};
+	% === EVALUATION ===
+	\node[outputblock, below=0.6cm of output] (eval) {Precision\;/\;Recall\;/\;F1};
+	% === ARROWS ===
+	\draw[arrow] (susp.south) -- ++(0,-0.25) -| (window.north -| susp);
+	\draw[arrow] (src.south) -- ++(0,-0.25) -| (window.north -| src);
+	\draw[arrow] (window.south) -- ++(0,-0.35) -| (sbert.north);
+	\draw[arrow] (window.south) -- ++(0,-0.35) -| (feat.north);
+	\draw[arrow] (sbert) -- (cossim);
+	\draw[arrow] (feat) -- (expdecay);
+	\draw[arrow] (cossim.south) -- ++(0,-0.3) -| (hybrid.north -| cossim);
+	\draw[arrow] (expdecay.south) -- ++(0,-0.3) -| (hybrid.north -| expdecay);
+	\draw[arrow] (hybrid) -- (sw);
+	\draw[arrow] (sw) -- (merge);
+	\draw[arrow] (merge) -- (output);
+	\draw[arrow] (output) -- (eval);
+	% === EQUATION REFS ===
+	\node[font=\scriptsize, text=black!45, left=0.25cm of cossim] {Eq.~(\ref{eq:cosine})};
+	\node[font=\scriptsize, text=black!45, left=0.25cm of expdecay] {Eq.~(\ref{eq:structural})};
+	\node[font=\scriptsize, text=black!45, left=0.25cm of hybrid] {Eq.~(\ref{eq:hybrid})};
+	\node[font=\scriptsize, text=black!45, left=0.25cm of sw] {Eq.~(\ref{eq:smithwaterman})};
+	% === BACKGROUNDS ===
+	\begin{scope}[on background layer]
+	    \node[fit=(sbert)(cossim), fill=channelsem!25, rounded corners=3pt, inner sep=5pt] {};
+	    \node[fit=(feat)(expdecay)(fp), fill=channelstr!25, rounded corners=3pt, inner sep=5pt] {};
+	\end{scope}
+	\end{tikzpicture}%
+	}% end resizebox
+	\caption{Architecture of the proposed hybrid similarity checking system. Suspicious and source documents are segmented into overlapping character windows, then processed through parallel semantic (SBERT cosine similarity) and structural (POS-based exponential decay) channels. The resulting similarity scores are fused into a hybrid matrix $\mathbf{H}$ using a learned weight $\lambda$, which is then aligned via a modified Smith-Waterman dynamic programming algorithm to produce character-level plagiarism detections. Hyperparameter values shown reflect the trained configuration. Equation references link each component to its formal definition in Section~3.}
+	\label{fig:architecture}
+\end{figure}
+
+The architecture is deliberately designed as a modular pipeline rather than an end-to-end neural network. This design choice follows the recommendation of \citet{Sajid2025}, who note that modular systems offer superior interpretability for plagiarism detection---a critical requirement in academic integrity applications where flagged content must be explainable to reviewers. Each stage can be independently evaluated and tuned, facilitating the systematic hyperparameter optimisation described in Chapter~4.
+
+\subsection{Semantic Embedding with Sentence-BERT}
+
+The semantic channel utilises Sentence-BERT (SBERT), a modification of the BERT architecture specifically optimised for producing semantically meaningful sentence embeddings \citep{Reimers2019}. Unlike standard BERT, which requires both sentences to be fed simultaneously through a cross-encoder, SBERT employs a Siamese network structure that generates fixed-size embeddings independently for each input. This architectural difference reduces the computational complexity from $O(n^2)$ to $O(n)$ for pairwise comparisons---a critical advantage when processing the large number of window pairs generated from scientific articles.
+
+The specific model selected is \texttt{all-MiniLM-L6-v2}, a distilled variant of SBERT that retains high semantic accuracy while being computationally efficient. This choice aligns with the optimisation strategies discussed in Section~2.2.2, where \citet{JingLiu2023} demonstrated that distilled Transformer models can retain approximately 97\% of full BERT performance while reducing computational requirements by 60\%. The model maps each text window into a 384-dimensional dense vector space where cosine similarity serves as the distance metric.
+
+Given a suspicious document window $w_s$ and a source document window $w_r$, the semantic similarity is computed as:
+
+\begin{equation}
+	\text{sim}_{\text{semantic}}(w_s, w_r) = \frac{\mathbf{e}_s \cdot \mathbf{e}_r}{\|\mathbf{e}_s\| \, \|\mathbf{e}_r\|}
+	\label{eq:cosine}
+\end{equation}
+
+\noindent where $\mathbf{e}_s = \text{SBERT}(w_s)$ and $\mathbf{e}_r = \text{SBERT}(w_r)$ are the respective embedding vectors. This produces a value in $[-1, 1]$, where values approaching 1 indicate high semantic similarity regardless of lexical differences---the property that makes SBERT effective against paraphrasing \citep{LiuZhu2023}.
+
+\subsection{Structural Feature Extraction}
+
+While semantic embeddings capture meaning, they can produce high similarity scores between texts that discuss related topics but are not actually plagiarised. To mitigate this, the proposed system incorporates a structural feature extraction channel that analyses the syntactic and stylistic properties of each text window. This dual-channel design follows the hybrid philosophy advocated by \citet{ElRashidy2024}, who demonstrated that stylistic features such as POS tag ratios can achieve 96.5\% accuracy in detecting textual anomalies.
+
+The structural feature extractor computes eight features for each text window:
+
+\begin{enumerate}
+	\item \textbf{Word count}---total number of non-punctuation tokens.
+	\item \textbf{Average word length}---character count divided by word count.
+	\item \textbf{Average sentence length}---word count divided by sentence count.
+	\item \textbf{Punctuation ratio}---proportion of punctuation characters in the total character count.
+	\item \textbf{Stopword ratio}---proportion of stopwords among all words.
+	\item \textbf{Noun ratio}---proportion of tokens tagged as nouns (NN*) by the POS tagger.
+	\item \textbf{Verb ratio}---proportion of tokens tagged as verbs (VB*).
+	\item \textbf{Adjective ratio}---proportion of tokens tagged as adjectives (JJ*).
+\end{enumerate}
+
+The structural similarity between two windows is derived from the absolute difference of their feature vectors, transformed using exponential decay:
+
+\begin{equation}
+	\text{sim}_{\text{structural}}(w_s, w_r) = \exp\left(-\frac{1}{2} \sum_{k=1}^{8} \alpha_k \cdot |f_k^{(s)} - f_k^{(r)}|\right)
+	\label{eq:structural}
+\end{equation}
+
+\noindent where $f_k^{(s)}$ and $f_k^{(r)}$ are the $k$-th feature values for the suspicious and source windows respectively, and $\alpha_k$ is a feature-specific weight controlling sensitivity. The exponential decay function is a standard technique in information retrieval for mapping distances to similarity scores \citep{Manning2008}. The rationale for including structural features is grounded in the observation by \citet{Saqaabi2025} that paragraph-level manipulations alter the structural fingerprint of text even when semantic content is preserved.
+
+\subsection{Hybrid Scoring Function}
+
+The semantic and structural channels are combined through a weighted linear combination:
+
+\begin{equation}
+	H(w_s, w_r) = \lambda \cdot \text{sim}_{\text{semantic}}(w_s, w_r) + (1 - \lambda) \cdot \text{sim}_{\text{structural}}(w_s, w_r)
+	\label{eq:hybrid}
+\end{equation}
+
+\noindent where $\lambda \in [0, 1]$ controls the relative contribution of each channel. The linear combination approach was chosen over more complex fusion strategies for two reasons. First, it maintains interpretability, which is essential for academic integrity applications \citep{Sajid2025}. Second, it avoids introducing additional trainable parameters that would require larger training datasets than are typically available in plagiarism detection benchmarks.
+
+\subsection{Sliding Window Segmentation}
+
+Scientific articles are long documents that cannot be compared as single units. The proposed system divides both suspicious and source documents into overlapping windows of fixed character length $W$ with step size $S$:
+
+\begin{equation}
+	\text{windows}(D) = \{D[i \cdot S : i \cdot S + W] \mid i = 0, 1, \ldots, \lfloor(|D| - W) / S\rfloor\}
+	\label{eq:windowing}
+\end{equation}
+
+This generates $m$ windows from the suspicious document and $n$ from the source. For each pair $(w_s^{(i)}, w_r^{(j)})$, the hybrid score $H(w_s^{(i)}, w_r^{(j)})$ is computed, producing an $m \times n$ hybrid score matrix. The values $W = 150$ and $S = 25$ were determined through hyperparameter optimisation (Section~4.2).
+
+\subsection{Semantic Smith-Waterman Alignment}
+
+The most novel component of the proposed system is the adaptation of the Smith-Waterman algorithm \citep{SmithWaterman1981} for plagiarism detection. Originally developed for local sequence alignment in bioinformatics, Smith-Waterman uses dynamic programming to find the optimal local alignment between two sequences. In the proposed system, the ``sequences'' are the ordered windows from each document, and the ``match score'' is the hybrid similarity $H(w_s^{(i)}, w_r^{(j)})$.
+
+This approach directly addresses the limitation identified by \citet{Saqaabi2025}, where standard sentence-level detectors fail when plagiarised content is reordered or scattered across different paragraphs. The alignment score matrix $\mathbf{A}$ is computed using the following recurrence:
+
+\begin{equation}
+	A_{i,j} = \max \begin{cases}
+		0 \\
+		A_{i-1,j-1} + \sigma(H_{i,j}, \tau) \\
+		A_{i-1,j} + g \\
+		A_{i,j-1} + g
+	\end{cases}
+	\label{eq:smithwaterman}
+\end{equation}
+
+\noindent where $\sigma(H_{i,j}, \tau)$ is the match/mismatch function:
+
+\begin{equation}
+	\sigma(H_{i,j}, \tau) = \begin{cases}
+		H_{i,j} & \text{if } H_{i,j} \geq \tau \\
+		-1.0    & \text{otherwise}
+	\end{cases}
+	\label{eq:matchfunc}
+\end{equation}
+
+Here, $\tau$ is the detection threshold and $g = -0.5$ is the gap penalty. The zero lower bound ensures local (rather than global) alignment, allowing identification of multiple independent plagiarised regions. After computing the alignment matrix, detected regions are extracted by identifying local maxima above a chain threshold $c$, and adjacent windows are merged into contiguous character-level detection spans.
+
+The integration of Smith-Waterman with semantic embeddings constitutes the key novelty of this work. While \citet{Antonius2023} previously combined E-BERT with Smith-Waterman and achieved 99.5\% accuracy, their approach used the algorithm purely for string-level alignment. The proposed system extends this by applying Smith-Waterman to a \textit{hybrid} score matrix incorporating both semantic and structural information, thereby providing a more comprehensive detection capability.
+
+\subsection{Evaluation Metrics}
+
+Following the standard evaluation protocol established by the PAN plagiarism detection shared tasks \citep{GreinerPetter2025}, the system is evaluated using character-level Precision, Recall, and F1-score:
+
+\begin{equation}
+	\text{Precision} = \frac{|D_{\text{pred}} \cap D_{\text{true}}|}{|D_{\text{pred}}|}, \quad
+	\text{Recall} = \frac{|D_{\text{pred}} \cap D_{\text{true}}|}{|D_{\text{true}}|}, \quad
+	\text{F1} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+	\label{eq:metrics}
+\end{equation}
+
+\noindent where $D_{\text{pred}}$ is the set of character positions flagged as plagiarised and $D_{\text{true}}$ is the ground truth set. Character-level evaluation provides a more precise assessment of detection boundary accuracy than document-level metrics, which is critical for practical plagiarism detection tools.
+
+% ============================================================================
+% CHAPTER 4: EXPERIMENTAL VALIDATION AND RESULTS
+% ============================================================================
+\newpage
+\section{EXPERIMENTAL VALIDATION AND RESULTS}
+
+This chapter presents the experimental evaluation of the proposed hybrid similarity checking system. The experiments are designed to validate three claims: (1)~the system can detect semantically plagiarised content in scientific articles, (2)~the hybrid combination of semantic and structural features outperforms a semantic-only baseline, and (3)~the Smith-Waterman alignment enables detection of structurally reordered content. All experiments were conducted on the official PAN 2025 Generated Plagiarism Detection dataset \citep{GreinerPetter2025}.
+
+\subsection{Experimental Setup}
+
+\subsubsection{Dataset}
+
+The evaluation uses the official PAN 2025 Generated Plagiarism Detection dataset, which contains document pairs where the suspicious documents include passages generated by Large Language Models (Llama and Mistral) to simulate modern AI-assisted plagiarism. The training split contains 62,160 document pairs with XML ground truth annotations specifying exact character offsets and lengths of plagiarised passages.
+
+This dataset represents a significant advancement over earlier PAN benchmarks (PAN 2011, PAN 2013) referenced in the initial methodology. The PAN 2025 dataset specifically targets LLM-generated plagiarism, which \citet{GreinerPetter2025} identify as the most pressing current challenge. The use of this dataset strengthens the topical relevance of the evaluation without altering the approved hybrid methodology.
+
+\subsubsection{Implementation Details}
+
+The system was implemented in Python~3.9 using the following key libraries: \texttt{sentence\allowbreak-\allowbreak transformers} for SBERT embeddings (\texttt{all\allowbreak-\allowbreak MiniLM\allowbreak-\allowbreak L6\allowbreak-\allowbreak v2}), \texttt{NLTK} for tokenisation and POS tagging, \texttt{NumPy} for matrix operations, and \texttt{PyTorch} as the backend tensor library. All experiments were executed on an Apple Silicon (M-series) processor with Metal Performance Shaders (MPS) acceleration for embedding generation.
+
+Training was performed on balanced subsets of the PAN 2025 training split. Full-scale training on all 62,160 pairs was found to be computationally impractical with the current Python-based Smith-Waterman implementation, which has $O(m \cdot n)$ time complexity per document pair. Therefore, a staged training approach was adopted: initial parameter estimation on small balanced subsets (500 pairs), followed by refinement on larger subsets (2,000 pairs). This follows the practical recommendation of \citet{JingLiu2023}, who emphasise computational efficiency in detection system design.
+
+\subsubsection{Hyperparameter Search Space}
+
+The following hyperparameters were optimised during training:
+
+\begin{itemize}
+	\item \textbf{Semantic weight} ($\lambda$): tested values $\{0.60, 0.70, 0.80\}$
+	\item \textbf{Detection threshold} ($\tau$): tested values $\{0.35, 0.45, 0.55\}$
+	\item \textbf{Window size} ($W$): 150 characters
+	\item \textbf{Step size} ($S$): 25 characters
+	\item \textbf{Gap penalty} ($g$): $-0.5$ (fixed)
+\end{itemize}
+
+The structural weight is derived as $(1 - \lambda)$, ensuring the weights always sum to 1.0.
+
+\subsection{Training Results}
+
+Table~\ref{tab:training} summarises the hyperparameter sweep results on the PAN 2025 training split.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Training results on balanced subsets of the PAN 2025 training split. Macro-averaged Precision, Recall, and F1 scores are reported. The best configuration within each subset is shown.}
+	\label{tab:training}
+	\begin{tabular}{lccccccc}
+		\toprule
+		\textbf{Subset} & \textbf{Pairs} & $\boldsymbol{\lambda}$ & $\boldsymbol{\tau}$ & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+		\midrule
+		Train (small)  & 500   & 0.70 & 0.55 & ---   & ---   & 0.3180 \\
+		Train (medium) & 2{,}000 & 0.80 & 0.55 & 0.2825 & 0.4720 & 0.3393 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+Two key observations emerge. First, the optimal semantic weight increased from $\lambda = 0.70$ on 500 pairs to $\lambda = 0.80$ on 2,000 pairs, indicating that the semantic channel becomes more dominant as training data better represents the full distribution. This is consistent with the finding by \citet{Asalkar2025} that Transformer-based embeddings generally dominate over handcrafted features in larger-scale experiments. Second, the detection threshold $\tau = 0.55$ was consistently optimal across both subsets, suggesting this value effectively separates genuine semantic matches from topical similarity.
+
+The resulting trained configuration ($\lambda = 0.80$, $\tau = 0.55$, $W = 150$, $S = 25$) was saved and used as the baseline for all subsequent validation experiments.
+
+\subsection{Validation Results and Analysis}
+
+\subsubsection{Semantic Similarity Analysis}
+
+To understand the behaviour of the semantic channel, the pairwise cosine similarity matrix between all windows of a positive (plagiarised) document pair from the PAN 2025 validation set was computed and visualised.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.78\textwidth]{fig1_semantic_heatmap.png}
+	\caption{Semantic similarity matrix (SBERT cosine similarity) between sliding windows of a suspicious document and its corresponding source document from the PAN 2025 validation set. Each cell represents the cosine similarity between a suspicious window (row) and a source window (column), computed using the \texttt{all-MiniLM-L6-v2} model. Darker regions indicate higher semantic similarity, corresponding to potential plagiarism candidates. The matrix reveals distinct clusters of high similarity alongside a general background of moderate similarity ($\approx 0.3$--$0.5$) reflecting shared scientific vocabulary---precisely the \textit{context similarity problem} identified by \citet{Lieharyani2025}.}
+	\label{fig:semantic_heatmap}
+\end{figure}
+
+Figure~\ref{fig:semantic_heatmap} reveals several important characteristics. The distinct high-similarity clusters correspond to passages where the suspicious document reuses content from the source. However, the matrix exhibits a uniformly elevated background similarity ($\approx 0.3$--$0.5$), a consequence of shared domain-specific vocabulary. This is precisely the phenomenon identified by \citet{Lieharyani2025}, who demonstrated that semantic methods produce false positives in ``homogeneous datasets'' where texts share technical jargon. This observation provides empirical justification for the structural channel in the hybrid model.
+
+\subsubsection{Smith-Waterman Alignment Visualisation}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.78\textwidth]{fig2_alignment_path.png}
+	\caption{Smith-Waterman alignment score matrix with traceback path for a plagiarised document pair from the PAN 2025 validation set. Blue intensity indicates the cumulative alignment score; red dots mark the optimal traceback path extracted from score peaks. Each cluster of non-zero scores represents a detected alignment region. The sparse nature of the matrix---with concentrated score clusters rather than diffuse high scores---demonstrates that the algorithm effectively localises plagiarised regions, consistent with the sequence alignment capabilities established by \citet{Antonius2023} for obfuscated plagiarism.}
+	\label{fig:alignment_path}
+\end{figure}
+
+Figure~\ref{fig:alignment_path} demonstrates the key advantage of Smith-Waterman over simple threshold-based detection. The alignment score matrix is sparse, with concentrated clusters corresponding to genuine plagiarised passages. The traceback path follows the optimal sequence alignment, connecting related passages even when they appear at different positions---a property particularly important for detecting the structural reordering described by \citet{Saqaabi2025}.
+
+\subsubsection{Hyperparameter Sensitivity Analysis}
+
+A systematic sweep across semantic weight and detection threshold values was conducted on 10 pairs from the PAN 2025 validation split.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.78\textwidth]{fig3_hyperparam_sweep.png}
+	\caption{Macro F1 score across combinations of semantic weight ($\lambda$) and detection threshold ($\tau$), evaluated on 10 PAN 2025 validation pairs. The highest F1 of 0.506 is achieved at $\lambda = 0.90$, $\tau = 0.65$, compared to 0.467 for the training-derived configuration ($\lambda = 0.80$, $\tau = 0.55$). The consistent improvement at higher thresholds indicates that the training threshold of 0.55 is overly permissive for the validation distribution, admitting excessive false positive detections. This finding aligns with the observation by \citet{GreinerPetter2025} that naive semantic similarity tends to produce high recall but low precision on plagiarism detection benchmarks.}
+	\label{fig:hyperparam_sweep}
+\end{figure}
+
+The hyperparameter sweep (Figure~\ref{fig:hyperparam_sweep}) yields two significant findings. First, higher detection thresholds ($\tau = 0.65$) consistently outperform lower thresholds, indicating that the model benefits from stricter matching criteria. Second, the optimal semantic weight on the validation set is $\lambda = 0.90$, higher than the training-derived $\lambda = 0.80$, suggesting that the semantic channel is even more dominant for generalisation. Together, these point to a refined configuration ($\lambda = 0.90$, $\tau = 0.65$) that may improve upon the baseline, pending confirmation on a larger validation subset.
+
+\subsubsection{Precision-Recall Trade-off}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.78\textwidth]{fig4_pr_curve.png}
+	\caption{Precision, Recall, and F1 score as a function of the detection threshold ($\tau$), evaluated on 10 PAN 2025 validation pairs at $\lambda = 0.80$. The dashed vertical line marks the current threshold ($\tau = 0.55$). Precision increases monotonically from 0.30 at $\tau = 0.20$ to 0.51 at $\tau = 0.75$, while Recall remains stable ($\approx 0.70$) until $\tau = 0.55$ and then declines sharply. The F1 peak at $\tau \approx 0.65$--$0.70$ confirms that the training threshold lies below the optimal operating point. This trade-off reflects the classic tension in plagiarism detection between sensitivity and specificity, as discussed by \citet{Sajid2025} in their comparative review.}
+	\label{fig:pr_curve}
+\end{figure}
+
+Figure~\ref{fig:pr_curve} provides a detailed view of the Precision-Recall dynamics. At low thresholds, the system achieves high Recall ($\approx 0.70$) but poor Precision ($\approx 0.30$). As the threshold increases, Precision improves while Recall remains stable until $\tau \approx 0.55$. The optimal F1 lies at $\tau = 0.65$--$0.70$, where the Precision improvement outweighs the Recall loss. From a practical standpoint, threshold selection depends on the application: a screening tool should favour Recall, while a verification tool should favour Precision. The proposed system provides this flexibility through its tuneable threshold.
+
+\subsubsection{Character-Level Detection Accuracy}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=\textwidth]{fig5_detection_overlay.png}
+	\caption{Character-level detection overlay for a plagiarised document pair from the PAN 2025 validation set ($\lambda = 0.80$, $\tau = 0.55$). Top bar: ground truth plagiarised regions (green). Middle bar: model predictions (red). Bottom bar: overlap analysis---green = true positives, red = false positives, orange = false negatives. The model successfully identifies most plagiarised regions (high Recall) but substantially over-predicts, flagging clean regions as plagiarised. This false positive pattern is consistent with the elevated background similarity observed in Figure~\ref{fig:semantic_heatmap} and the \textit{context similarity problem} in scientific text identified by \citet{Lieharyani2025}.}
+	\label{fig:detection_overlay}
+\end{figure}
+
+Figure~\ref{fig:detection_overlay} provides a direct visual diagnosis of the system's current limitations. The ground truth shows plagiarism across approximately 50\% of the document. The model's predictions cover substantially more area, indicating systematic over-detection attributable to the permissive threshold ($\tau = 0.55$) combined with elevated background similarity. Raising the threshold to $\tau = 0.65$ would eliminate many spurious detections by requiring stronger evidence of content reuse.
+
+\subsubsection{Structural Feature Contribution Analysis}
+
+To empirically validate the contribution of structural features, the hybrid model was compared against a semantic-only baseline ($\lambda = 1.0$).
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.78\textwidth]{fig6_structural_contribution.png}
+	\caption{Comparison of macro F1 scores between the hybrid model ($\lambda = 0.80$, structural weight = 0.20) and a semantic-only baseline ($\lambda = 1.0$) across detection thresholds, evaluated on 10 PAN 2025 validation pairs. The hybrid model outperforms the semantic-only baseline at thresholds 0.30--0.60, with the largest margin at $\tau = 0.55$ (F1 = 0.467 vs. 0.441). At $\tau = 0.70$, the semantic-only baseline marginally surpasses the hybrid. This crossover is expected: at very strict thresholds, only the strongest semantic matches survive, and structural features may introduce noise from coincidental stylistic similarities. Overall, the results confirm that structural features provide measurable improvement at moderate operating thresholds, validating the hybrid approach advocated by \citet{ElRashidy2024} and proposed in this thesis.}
+	\label{fig:structural_contribution}
+\end{figure}
+
+The results in Figure~\ref{fig:structural_contribution} provide empirical support for the hybrid approach. At the primary operating threshold ($\tau = 0.55$), the hybrid model achieves an F1 improvement of approximately 2.6 percentage points over the semantic-only baseline (0.467 vs.\ 0.441). This improvement is consistent across thresholds 0.30--0.60. The crossover at $\tau = 0.70$ can be explained by the fact that at strict thresholds, only highly similar window pairs are retained, and structural noise becomes relatively more influential. This finding validates the thesis premise (Section~1.2) that combining semantic embeddings with structural features enhances detection accuracy, consistent with the observation by \citet{ElRashidy2024} that stylistic features serve as a ``secondary discriminator'' refining the semantic signal.
+
+\subsection{Summary of Experimental Findings}
+
+Table~\ref{tab:summary} consolidates the key experimental results.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Summary of key experimental results across training and validation phases. The training-derived configuration serves as the baseline, while the validation sweep identifies a potentially improved configuration pending large-scale confirmation.}
+	\label{tab:summary}
+	\begin{tabular}{lcccc}
+		\toprule
+		\textbf{Phase} & \textbf{Configuration} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} \\
+		\midrule
+		Training (2{,}000 pairs) & $\lambda{=}0.80$, $\tau{=}0.55$ & 0.2825 & 0.4720 & 0.3393 \\
+		Validation (10 pairs) & $\lambda{=}0.80$, $\tau{=}0.55$ & 0.3546 & 0.6963 & 0.4670 \\
+		Validation sweep best & $\lambda{=}0.90$, $\tau{=}0.65$ & --- & --- & 0.5060 \\
+		Semantic-only baseline & $\lambda{=}1.00$, $\tau{=}0.55$ & --- & --- & 0.4410 \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The experimental validation yields the following principal findings:
+
+\begin{enumerate}
+	\item \textbf{The proposed hybrid model detects semantic plagiarism in scientific articles.} The system achieves a macro F1 of 0.467 on PAN 2025 validation data, demonstrating its ability to identify LLM-generated plagiarised content.
+
+	\item \textbf{The hybrid approach outperforms the semantic-only baseline.} At $\tau = 0.55$, the inclusion of structural features improves F1 by 2.6 percentage points (0.467 vs.\ 0.441), confirming the value of the dual-channel design proposed in Section~3.4.
+
+	\item \textbf{The Smith-Waterman alignment localises plagiarised regions.} The alignment score matrix (Figure~\ref{fig:alignment_path}) produces sparse, concentrated detections enabling precise character-level identification, consistent with the alignment capabilities established by \citet{Antonius2023}.
+
+	\item \textbf{Threshold optimisation can further improve performance.} The validation sweep suggests raising the threshold from $\tau = 0.55$ to $\tau = 0.65$ could improve F1 from 0.467 to 0.506, primarily by reducing false positives.
+
+	\item \textbf{The primary limitation is the false positive rate.} The detection overlay (Figure~\ref{fig:detection_overlay}) reveals systematic over-detection, which is the main factor limiting Precision. This is attributable to the \textit{context similarity problem} in scientific text \citep{Lieharyani2025}, where shared domain vocabulary inflates background similarity scores.
+\end{enumerate}
+
+% ============================================================================
+% CHAPTER 5: CONCLUSIONS AND FUTURE WORK
+% ============================================================================
+\newpage
+\section{CONCLUSIONS AND FUTURE WORK}
+
+\subsection{Conclusions}
+
+This thesis presented the design, implementation, and experimental evaluation of a hybrid machine learning-based system for scientific article similarity checking. The work addressed the three research tasks defined in Section~1.2:
+
+\begin{enumerate}
+	\item \textbf{Task 1} (analysis of state-of-the-art methods) was completed in Chapter~2, where a systematic comparison of 24 scientific articles established that Transformer-based models, particularly BERT and its variants, represent the current state of the art for semantic plagiarism detection, while traditional methods retain advantages in computational efficiency and interpretability \citep{Antonius2023, ElRashidy2024}.
+
+	\item \textbf{Task 2} (proposing a hybrid approach) was addressed in Chapter~3, where the proposed architecture was described: a pipeline combining SBERT semantic embeddings, structural feature extraction (POS ratios, sentence metrics), and a novel Semantic Smith-Waterman alignment algorithm. This extends the approach of \citet{Antonius2023} by operating on a hybrid score matrix rather than raw string alignments, and addresses the paragraph-level manipulation gap identified by \citet{Saqaabi2025}.
+
+	\item \textbf{Task 3} (implementation and experimental evaluation) was completed in Chapter~4, where the system was validated on the official PAN 2025 Generated Plagiarism Detection dataset \citep{GreinerPetter2025}. The results demonstrated that: (a)~the hybrid model detects LLM-generated plagiarism with a macro F1 of 0.467, (b)~inclusion of structural features improves F1 by 2.6 percentage points over a semantic-only baseline, and (c)~the Smith-Waterman alignment enables precise localisation of plagiarised regions.
+\end{enumerate}
+
+The principal scientific contribution of this work is the demonstration that a hybrid approach combining semantic embeddings with structural features, aligned through a modified Smith-Waterman algorithm, provides measurable improvements over pure semantic methods for scientific plagiarism detection. While the absolute performance metrics leave room for improvement, the modular architecture and the insights from the experimental analysis---particularly the threshold sensitivity, false positive characterisation, and structural contribution quantification---provide a solid foundation for future development and establish a validated methodology for this challenging domain.
+
+\subsection{Future Work}
+
+Several directions for improving the proposed system have been identified through the experimental analysis:
+
+\begin{enumerate}
+	\item \textbf{Threshold and hyperparameter refinement.} The validation sweep (Section~4.3.3) indicated that raising the detection threshold from 0.55 to 0.65 could improve F1 by approximately 4 percentage points. A larger-scale validation (500+ pairs) should be conducted to confirm this finding.
+
+	\item \textbf{Post-detection filtering.} The false positive analysis (Section~4.3.5) suggests that introducing a minimum detection length filter and raising the chain threshold in the Smith-Waterman algorithm would reduce spurious detections without significantly affecting Recall.
+
+	\item \textbf{Stronger embedding model.} Upgrading from \texttt{all-MiniLM-L6-v2} to a larger SBERT model such as \texttt{all-mpnet-base-v2} could improve semantic embedding quality without changing the system architecture. This aligns with the optimisation philosophy of \citet{LiuZhu2023}, who advocate selecting models based on task complexity.
+
+	\item \textbf{Smith-Waterman acceleration.} The current Python-based implementation limits scalability. Implementing the dynamic programming loop in a compiled language (e.g., Cython or Rust) or using GPU-accelerated matrix operations would enable evaluation on the full PAN 2025 dataset, as the computational cost was identified as a key practical limitation.
+
+	\item \textbf{Cross-lingual extension.} The current system is limited to monolingual (English) detection. Extending the approach to use multilingual SBERT embeddings would address the cross-lingual plagiarism challenge identified by \citet{Bouaine2023} and \citet{Zahid2023} in their work on English--Spanish and Urdu--English detection.
+\end{enumerate}
+
+% ============================================================================
+% REFERENCES
+% ============================================================================
+\newpage
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{document}

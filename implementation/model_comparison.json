@@ -1,0 +1,17 @@
+{
+  "minilm": {
+    "model": "all-MiniLM-L6-v2",
+    "precision": 0.4427,
+    "recall": 0.5463,
+    "f1": 0.482,
+    "precompute_time": 477.9
+  },
+  "mpnet": {
+    "model": "all-mpnet-base-v2",
+    "precision": 0.40142655553643425,
+    "recall": 0.5694543870612037,
+    "f1": 0.46198763517397695,
+    "precompute_time": 946.4326918125153
+  },
+  "winner": "all-MiniLM-L6-v2"
+}

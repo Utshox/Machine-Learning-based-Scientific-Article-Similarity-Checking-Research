@@ -1,0 +1,143 @@
+{
+  "pair_limit": 100,
+  "total_configs": 2160,
+  "precompute_time": 908.9584159851074,
+  "sw_time": 2943.3114812374115,
+  "post_time": 0.0,
+  "dataset": "/home/shinthiya.promi/MS_THESIS_GCP_READY/implementation/data/pan25-generated-plagiarism-detection-validation.zip",
+  "model_name": "all-MiniLM-L6-v2",
+  "baseline": {
+    "semantic_weight": 0.8,
+    "structural_weight": 0.2,
+    "threshold": 0.55,
+    "gap_penalty": -0.5,
+    "chain_threshold": 0.1,
+    "min_detection_length": 0,
+    "precision": 0.38226356628334884,
+    "recall": 0.6586711440740136,
+    "f1": 0.4712134722362486
+  },
+  "best": {
+    "semantic_weight": 0.95,
+    "structural_weight": 0.05,
+    "threshold": 0.7,
+    "gap_penalty": -0.5,
+    "chain_threshold": 0.1,
+    "min_detection_length": 300,
+    "precision": 0.48980937309598865,
+    "recall": 0.5925714293670385,
+    "f1": 0.5257849745557741
+  },
+  "top10": [
+    {
+      "semantic_weight": 0.95,
+      "structural_weight": 0.05,
+      "threshold": 0.7,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.48980937309598865,
+      "recall": 0.5925714293670385,
+      "f1": 0.5257849745557741
+    },
+    {
+      "semantic_weight": 0.95,
+      "structural_weight": 0.05,
+      "threshold": 0.7,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.5,
+      "min_detection_length": 300,
+      "precision": 0.48980937309598865,
+      "recall": 0.5925714293670385,
+      "f1": 0.5257849745557741
+    },
+    {
+      "semantic_weight": 0.95,
+      "structural_weight": 0.05,
+      "threshold": 0.65,
+      "gap_penalty": -0.5,
+      "chain_threshold": 1.0,
+      "min_detection_length": 300,
+      "precision": 0.48828133070750745,
+      "recall": 0.5915435023223415,
+      "f1": 0.5234625512871404
+    },
+    {
+      "semantic_weight": 0.9,
+      "structural_weight": 0.1,
+      "threshold": 0.6,
+      "gap_penalty": -0.5,
+      "chain_threshold": 2.0,
+      "min_detection_length": 300,
+      "precision": 0.5072782121921834,
+      "recall": 0.5693169234111656,
+      "f1": 0.5229958919985953
+    },
+    {
+      "semantic_weight": 0.95,
+      "structural_weight": 0.05,
+      "threshold": 0.6,
+      "gap_penalty": -0.5,
+      "chain_threshold": 2.0,
+      "min_detection_length": 300,
+      "precision": 0.4849457896328363,
+      "recall": 0.5963515481151282,
+      "f1": 0.5225330470878117
+    },
+    {
+      "semantic_weight": 0.85,
+      "structural_weight": 0.15,
+      "threshold": 0.6,
+      "gap_penalty": -0.5,
+      "chain_threshold": 1.0,
+      "min_detection_length": 300,
+      "precision": 0.4897546874665752,
+      "recall": 0.585500740356538,
+      "f1": 0.5218473436033222
+    },
+    {
+      "semantic_weight": 0.85,
+      "structural_weight": 0.15,
+      "threshold": 0.65,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.488037124985177,
+      "recall": 0.5855892717559882,
+      "f1": 0.5213681819367834
+    },
+    {
+      "semantic_weight": 0.85,
+      "structural_weight": 0.15,
+      "threshold": 0.65,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.5,
+      "min_detection_length": 300,
+      "precision": 0.488037124985177,
+      "recall": 0.5855892717559882,
+      "f1": 0.5213681819367834
+    },
+    {
+      "semantic_weight": 0.85,
+      "structural_weight": 0.15,
+      "threshold": 0.55,
+      "gap_penalty": -0.5,
+      "chain_threshold": 2.0,
+      "min_detection_length": 300,
+      "precision": 0.4935016949419267,
+      "recall": 0.5829304463551171,
+      "f1": 0.5213458428434923
+    },
+    {
+      "semantic_weight": 0.9,
+      "structural_weight": 0.1,
+      "threshold": 0.6,
+      "gap_penalty": -0.5,
+      "chain_threshold": 2.0,
+      "min_detection_length": 200,
+      "precision": 0.491528828954281,
+      "recall": 0.5829129630849574,
+      "f1": 0.5211025247188816
+    }
+  ]
+}

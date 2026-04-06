@@ -1,0 +1,129 @@
+{
+  "pair_limit": 100,
+  "total_configs": 3024,
+  "best": {
+    "semantic_weight": 0.94,
+    "structural_weight": 0.06,
+    "threshold": 0.7,
+    "gap_penalty": -0.5,
+    "chain_threshold": 0.1,
+    "min_detection_length": 300,
+    "precision": 0.4949975338563429,
+    "recall": 0.5866158512984785,
+    "f1": 0.526345921646504
+  },
+  "top10": [
+    {
+      "semantic_weight": 0.94,
+      "structural_weight": 0.06,
+      "threshold": 0.7,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.4949975338563429,
+      "recall": 0.5866158512984785,
+      "f1": 0.526345921646504
+    },
+    {
+      "semantic_weight": 0.94,
+      "structural_weight": 0.06,
+      "threshold": 0.7,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.5,
+      "min_detection_length": 300,
+      "precision": 0.4949975338563429,
+      "recall": 0.5866158512984785,
+      "f1": 0.526345921646504
+    },
+    {
+      "semantic_weight": 0.94,
+      "structural_weight": 0.06,
+      "threshold": 0.7,
+      "gap_penalty": -0.7,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.49463714082335697,
+      "recall": 0.587168942251623,
+      "f1": 0.5263246655188847
+    },
+    {
+      "semantic_weight": 0.94,
+      "structural_weight": 0.06,
+      "threshold": 0.7,
+      "gap_penalty": -0.7,
+      "chain_threshold": 0.5,
+      "min_detection_length": 300,
+      "precision": 0.49463714082335697,
+      "recall": 0.587168942251623,
+      "f1": 0.5263246655188847
+    },
+    {
+      "semantic_weight": 0.98,
+      "structural_weight": 0.02,
+      "threshold": 0.72,
+      "gap_penalty": -0.3,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.49243657216000164,
+      "recall": 0.590031030964013,
+      "f1": 0.5263020270280667
+    },
+    {
+      "semantic_weight": 0.98,
+      "structural_weight": 0.02,
+      "threshold": 0.72,
+      "gap_penalty": -0.3,
+      "chain_threshold": 0.5,
+      "min_detection_length": 300,
+      "precision": 0.49243657216000164,
+      "recall": 0.590031030964013,
+      "f1": 0.5263020270280667
+    },
+    {
+      "semantic_weight": 0.94,
+      "structural_weight": 0.06,
+      "threshold": 0.7,
+      "gap_penalty": -0.3,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.4955610128517685,
+      "recall": 0.5855767516455241,
+      "f1": 0.5262846175852194
+    },
+    {
+      "semantic_weight": 0.94,
+      "structural_weight": 0.06,
+      "threshold": 0.7,
+      "gap_penalty": -0.3,
+      "chain_threshold": 0.5,
+      "min_detection_length": 300,
+      "precision": 0.4955610128517685,
+      "recall": 0.5855767516455241,
+      "f1": 0.5262846175852194
+    },
+    {
+      "semantic_weight": 1.0,
+      "structural_weight": 0.0,
+      "threshold": 0.7,
+      "gap_penalty": -0.3,
+      "chain_threshold": 1.0,
+      "min_detection_length": 300,
+      "precision": 0.49987561780774237,
+      "recall": 0.581973244903874,
+      "f1": 0.5262200376872503
+    },
+    {
+      "semantic_weight": 0.98,
+      "structural_weight": 0.02,
+      "threshold": 0.72,
+      "gap_penalty": -0.5,
+      "chain_threshold": 0.1,
+      "min_detection_length": 300,
+      "precision": 0.49188076416360843,
+      "recall": 0.5908660809956242,
+      "f1": 0.526211286314053
+    }
+  ],
+  "precompute_time": 899.3080365657806,
+  "sweep_time": 4039.6949281692505
+}
