@@ -52,11 +52,13 @@ This document tracks the progress, findings, and major changes in the developmen
     - Model comparison completed (50 pairs, best Phase 2 config):
         - MiniLM: F1=0.4820, mpnet: F1=0.4620
         - **Winner: all-MiniLM-L6-v2** (faster and more accurate)
-    - Uploaded 3 new experiment scripts to VM for further exploration:
-        - `exp_fine_grid.py` — finer hyperparameter grid around the optimum
-        - `exp_window_sweep.py` — window_size/step_size sweep (80–300 / 15–50)
-        - `exp_train_val_split.py` — proper train/val methodology (tune on train, evaluate on val)
-    - Current plan: run all 3 experiments sequentially on GCP GPU
+    - Uploaded and ran 3 experiment scripts on VM:
+        - `exp_fine_grid.py` — F1=0.5263, optimum converged
+        - `exp_window_sweep.py` — F1=0.5291, window 200/25 is best
+        - `exp_train_val_split.py` — F1=0.5219 on val with train-tuned config
+    - All results copied locally and pushed to GitHub
+    - VM stopped to save costs
+    - Added chunked structural matrix computation to avoid OOM on large pairs
 - **2026-04-03:**
     - Stopped the local `all-mpnet-base-v2` validation comparison on macOS after confirming that the MPS + multiprocessing path was unreliable and unproductively slow for the larger model.
     - Preserved the current confirmed baseline from the 50-pair Phase 2 work:
@@ -203,6 +205,8 @@ This document tracks the progress, findings, and major changes in the developmen
 6. [x] **Experiment 5 — Fine grid:** F1=0.5263 (+0.0005), confirms optimum is converged at sem~0.94-0.98, thr~0.70.
 7. [x] **Experiment 1 — Window sweep:** Window 200/25 wins with F1=0.5291 (+0.0033 over 150/25). Step size 25 consistently best. 2h08m runtime.
 8. [x] **Experiment 3 — Train/val split:** Train-tuned F1=0.5219 on val (vs val-tuned 0.5258). Only -0.0038 drop — model generalizes well, not overfit.
-9. [ ] **Final validation:** Run the overall best config on 100+ validation pairs (or spot-check set if train/val split is used).
-10. [ ] **Re-generate visualizations:** Update figures with improved config for Chapter 4.
-11. [ ] **Update thesis LaTeX:** Add all experiment results, update tables, conclusions.
+9. [ ] **Experiment 2 — Enhanced structural features:** Add TF-IDF cosine similarity, character n-gram overlap, and NER overlap to `features.py`. Re-run sweep. Needs code changes + GCP.
+10. [ ] **Experiment 4 — Adaptive threshold by doc length:** Adjust detection threshold based on document size. Needs code changes + GCP.
+11. [ ] **Final validation:** Run overall best config on spot-check (test) set for the final reported number.
+12. [ ] **Re-generate visualizations:** Update 6 figures with best config (window 200/25) for Chapter 4.
+13. [ ] **Update thesis LaTeX:** Add all experiment results (Exp 1, 3, 5 + any new), update tables, conclusions.
